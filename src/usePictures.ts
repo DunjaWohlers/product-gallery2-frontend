@@ -26,5 +26,9 @@ export default function usePictures() {
             );
     }
 
-    return {imageInfos, uploadPicture}
+    const addTags = (id: string, tags: string[]) => {
+        axios.post("/api/addTag/" + id, tags);
+    }
+
+    return {imageInfos, uploadPicture, addTags}
 }

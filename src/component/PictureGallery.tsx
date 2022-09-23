@@ -4,7 +4,7 @@ import usePictures from "../usePictures";
 
 export default function PictureGallery() {
 
-    const {imageInfos, uploadPicture} = usePictures();
+    const {imageInfos, uploadPicture, addTags} = usePictures();
 
     const handleSave = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -12,8 +12,11 @@ export default function PictureGallery() {
     }
 
     return <>
-
-        {imageInfos?.map(info => <PictureEntry url={info.url}/>)}
+        {imageInfos?.map(info => <PictureEntry
+            key={info.url}
+            info={info}
+            addTags={addTags}
+        />)}
         <form onSubmit={handleSave}>
             <label> Neues Bild hinzufügen: </label>
             <input type={"file"} name={"file"}/>
