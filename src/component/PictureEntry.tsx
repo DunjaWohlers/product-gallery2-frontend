@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {ImageInfo} from "../type/ImageInfo";
+import {ImageCard} from "../type/ImageCard";
 
 type PictureEntryProps = {
-    info: ImageInfo,
+    info: ImageCard,
     addTags: (id: string, tags: string[]) => void,
 }
 export default function PictureEntry(props: PictureEntryProps) {
@@ -13,12 +13,13 @@ export default function PictureEntry(props: PictureEntryProps) {
         props.addTags(props.info.publicId, inputString);
     }
 
-    return <p>
+    return <>
         <img src={props.info.url} alt={"img"}/>
+        {props.info.tags.map(tag=><p key={crypto.randomUUID()}>{tag}</p>)}
         <input type={"text"} onChange={
             (event) =>
                 setInputValue(event.target.value)}
         />
         <button onClick={handleClick}> Add Tag to Picture</button>
-    </p>
+    </>
 }

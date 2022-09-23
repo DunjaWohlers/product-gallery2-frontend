@@ -1,10 +1,10 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {ImageInfo} from "./type/ImageInfo";
+import {ImageCard} from "./type/ImageCard";
 
 export default function usePictures() {
 
-    const [imageInfos, setImageInfos] = useState<ImageInfo[]>();
+    const [imageInfos, setImageInfos] = useState<ImageCard[]>();
 
     const getAllImageInfos = () => {
         axios.get("/api")
