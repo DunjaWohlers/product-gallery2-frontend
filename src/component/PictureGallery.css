@@ -1,0 +1,62 @@
+.pictureGalleryContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.pictureUploadForm {
+    margin: 50px auto auto auto;
+    width: 230px;
+}
+
+.pictureUploadForm div {
+    margin-top: 3px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px black;
+    height: 30px;
+}
+
+.pictureUploadForm label {
+    font-size: 12px;
+}
+
+.pictureUploadForm input {
+    position: relative;
+    top: -5px;
+    font-size: 17px;
+    width: 200px;
+    line-height: 30px;
+}
+
+.pictureUploadForm input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+    height: 0;
+    width: 0;
+}
+
+.pictureUploadForm button {
+    line-height: 30px;
+    font-size: 30px;
+    background: none;
+    border: none;
+}
+
+.tagsFilterFormContainer {
+    font-size: 9px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filterResetButton {
+    font-size:12px;
+    line-height:11px;
+    padding: 0;
+    background: none;
+    border-radius: 5px;
+    border: 1px black solid;
+    margin: 0 5px 0 15px;
+    height:13px;
+    width:13px;
+}

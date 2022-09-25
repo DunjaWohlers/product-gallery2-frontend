@@ -6,7 +6,10 @@ export default function App() {
 
     return (
         <div className="App">
-            <PictureGallery/>
+            <h1> Bilder-Gallerie </h1>
+            <main>
+                <PictureGallery/>
+            </main>
         </div>
     );
 }

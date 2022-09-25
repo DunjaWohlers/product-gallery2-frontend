@@ -1,0 +1,55 @@
+.previewContainer {
+    opacity: 0.6;
+}
+
+.card, .previewContainer img {
+    margin-top: 20px;
+    background-color: rgba(227, 228, 229, 0.31);
+    border-radius: 6px;
+    border: 1px black solid;
+    box-shadow: 3px 3px 3px #8a8888;
+}
+
+.tagContainer {
+    display: none;
+    flex-wrap: wrap;
+    font-size: 12px;
+}
+
+.tag {
+    margin-left: 10px;
+    border-left: 1px black solid;
+    padding-left: 2px;
+}
+
+.cardLabel {
+    font-size: 10px;
+}
+
+.cardInput {
+    border-radius: 5px;
+    border: 1px black solid;
+    width: 100px;
+}
+
+.imageFrame {
+    height: 150px;
+}
+
+.cardImage {
+    margin: auto;
+    border-radius: 6px;
+    height: 150px;
+}
+
+.cardForm div {
+    display: flex;
+    margin: auto;
+}
+
+.cardForm {
+    height: 0;
+    position: relative;
+    left:5px;
+    top: -50px;
+}
