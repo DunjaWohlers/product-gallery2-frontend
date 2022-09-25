@@ -11,6 +11,7 @@ type PictureEntryProps = {
 export default function PictureEntry(props: PictureEntryProps) {
     const [inputValue, setInputValue] = useState<string>("");
     const [visible, setVisible] = useState<boolean>(false);
+    const maxShownTags = 3;
 
     const handleClick = () => {
         let inputString = inputValue.split(" ");
@@ -28,7 +29,7 @@ export default function PictureEntry(props: PictureEntryProps) {
                 <img className={"cardImage"} src={props.info.url} alt={"img"}/>
             </div>
             {props.showTags && <div className={"tagContainer"}>
-                {props.info.tags.map(tag =>
+                {props.info.tags.slice(0,maxShownTags).map(tag =>
                     <div className="tag" key={crypto.randomUUID()}>{tag}</div>)}
             </div>
             }
