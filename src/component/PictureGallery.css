@@ -43,13 +43,12 @@
 
 .tagsFilterFormContainer {
     font-size: 9px;
-
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 }
 
-.filterResetButton {
+.filterResetButton, .showTagsButton {
     font-size:12px;
     line-height:11px;
     padding: 0;

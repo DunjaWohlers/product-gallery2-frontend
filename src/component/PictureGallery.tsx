@@ -1,14 +1,15 @@
-import PictureEntry from "./PictureEntry";
 import React, {ChangeEvent, FormEvent, useState} from "react";
 import usePictures from "../api/usePictures";
 import "./PictureGallery.css";
 import CheckBox from "./CheckBox";
+import PictureEntry from "./PictureEntry";
 
 export default function PictureGallery() {
 
     const {imageInfos, allTags, uploadPicture, addTags} = usePictures();
     const [imagePreload, setPicPreload] = useState<File>();
     const [actualTags, setActualTags] = useState<string[]>();
+    const [showTags, setShowTags] = useState<boolean>(false);
 
     const handleSave = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -25,8 +26,11 @@ export default function PictureGallery() {
         if (!actual) {
             actual = [];
         }
-        actual = actual.concat(tag);
-        setActualTags(actual);
+        if(!actual.includes(tag)) {
+            actual = actual.concat(tag);
+            setActualTags(actual);
+        }
+        console.log(actual);
     }
 
     const deleteTagFromActualTags = (tag: string) => {
@@ -41,36 +45,58 @@ export default function PictureGallery() {
         }
     }
 
+    const handleShowTags = () => {
+        showTags
+            ? setShowTags(false)
+            : setShowTags(true)
+    }
+
     return <>
         <div className={"noPrint tagsFilterFormContainer"}>
+            <CheckBox
+                tag={"ohne Tag"}
+                deleteTagFromActualTags={deleteTagFromActualTags}
+                addTagToActualTags={addTagFromActualTags}
+                isActualTag={actualTags?actualTags.includes("withoutTag"):false}
+            />
             {allTags ? allTags.map(tag =>
                     <CheckBox
+                        key={tag}
                         tag={tag}
                         deleteTagFromActualTags={deleteTagFromActualTags}
                         addTagToActualTags={addTagFromActualTags}
-                        deselect={!actualTags}
-                        isSelected={actualTags ? actualTags.includes(tag) : false}
+                        isActualTag={actualTags?actualTags.includes(tag):false}
                     />
                 )
                 : "keine Tags vorhanden"
             }
-            <button className={"filterResetButton"} onClick={() => setActualTags(undefined)}> x</button>
+            <button className={"filterResetButton"}
+                    onClick={() => setActualTags(undefined)}> x
+            </button>
             Filter aufheben
+            <input className={"showTagsButton"} type={"checkbox"}
+                   defaultChecked={false}
+                   onChange={handleShowTags}/>
+            Tags einblenden
         </div>
         <div className={"pictureGalleryContainer"}>
-            {imageInfos?.map(info =>
-                    (
-                        (actualTags && info.tags.some(tag => actualTags.includes(tag))
+            {imageInfos &&
+                imageInfos.map(info =>
+                        (
+                            (actualTags && info.tags.some(tag => actualTags.includes(tag))
+                            )
+                            ||
+                            !actualTags
+                            ||
+                            (actualTags.includes("withoutTag") && info.tags.length === 0)
                         )
-                        ||
-                        !actualTags
-                    )
-                    && <PictureEntry
-                        key={info.url}
-                        info={info}
-                        addTags={addTags}
-                    />
-            )}
+                        && <PictureEntry
+                            key={info.url}
+                            info={info}
+                            addTags={addTags}
+                            showTags={showTags}
+                        />
+                )}
         </div>
         <form className={"pictureUploadForm noPrint"} onSubmit={handleSave}>
             <label> Neues Bild hinzufügen: </label>
@@ -80,7 +106,8 @@ export default function PictureGallery() {
             </div>
         </form>
         <div className={"previewContainer"}>
-            {imagePreload && <img src={URL.createObjectURL(imagePreload)} alt={"picture with Name:" + imagePreload.name}/>}
+            {imagePreload &&
+                <img src={URL.createObjectURL(imagePreload)} alt={"picture with Name:" + imagePreload.name}/>}
         </div>
     </>
 }

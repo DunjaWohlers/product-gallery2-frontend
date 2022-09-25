@@ -2,30 +2,30 @@ import React, {ChangeEvent} from "react";
 
 type CheckBoxProps = {
     tag: string,
-    deselect: boolean,
-    isSelected: boolean,
     addTagToActualTags: (tag: string) => void,
     deleteTagFromActualTags: (tag: string) => void,
+    isActualTag: boolean,
 }
 
 export default function CheckBox(props: CheckBoxProps) {
-    const filter = (event: ChangeEvent<HTMLInputElement>, tag: string) => {
+
+    const filter = (event: ChangeEvent<HTMLInputElement>) => {
         let checked: boolean = event.target.checked;
+        const thisTag = props.tag==="ohne Tag" ? "withoutTag" : props.tag;
+
         if (checked) {
-            props.addTagToActualTags(tag);
+            props.addTagToActualTags(thisTag);
         } else {
-            props.deleteTagFromActualTags(tag);
+            props.deleteTagFromActualTags(thisTag);
         }
     }
 
     return (
         <>
             <input
-                checked={props.deselect ? false : props.isSelected}
+                checked={props.isActualTag}
                 type={"checkbox"}
-                onChange={
-                    (event) => filter(event, props.tag)
-                }
+                onChange={filter}
                 name={"tag"}
             />
             <label> {props.tag} </label>

@@ -5,7 +5,9 @@ import "./PictureEntry.css";
 type PictureEntryProps = {
     info: ImageCard,
     addTags: (id: string, tags: string[]) => void,
+    showTags: boolean,
 }
+
 export default function PictureEntry(props: PictureEntryProps) {
     const [inputValue, setInputValue] = useState<string>("");
     const [visible, setVisible] = useState<boolean>(false);
@@ -25,10 +27,11 @@ export default function PictureEntry(props: PictureEntryProps) {
             <div className={"imageFrame"} onClick={toggleVisible}>
                 <img className={"cardImage"} src={props.info.url} alt={"img"}/>
             </div>
-            <div className={"tagContainer"}>
+            {props.showTags && <div className={"tagContainer"}>
                 {props.info.tags.map(tag =>
                     <div className="tag" key={crypto.randomUUID()}>{tag}</div>)}
             </div>
+            }
             {visible ? <form className={"cardForm"} onSubmit={handleClick}>
                     <label className={"cardLabel"}> Neuer Tag: </label>
                     <div>
