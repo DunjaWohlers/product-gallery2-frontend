@@ -34,7 +34,7 @@ export default function usePictures() {
     const uploadPicture = (htmlFormElement: HTMLFormElement) => {
         const formData = new FormData(htmlFormElement);
         axios
-            .post("https://picturehandler123dev.s3.amazonaws.com/dev/file/upload", formData)
+            .put("/file/upload", formData)
             .then(data => data.data)
             .then(getAllImageInfos)
             .catch(() => {

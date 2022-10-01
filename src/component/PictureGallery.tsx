@@ -96,7 +96,8 @@ export default function PictureGallery() {
                             addTags={addTags}
                             showTags={showTags}
                         />
-                )}
+                )
+            }
         </div>
         <form className={"pictureUploadForm noPrint"} onSubmit={handleSave}>
             <label> Neues Bild hinzufügen: </label>
