@@ -43,6 +43,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://4tv0vy3bi2.execute-api.us-east-1.amazonaws.com/dev"
+  }
 }
