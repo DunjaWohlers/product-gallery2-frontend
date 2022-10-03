@@ -1,19 +1,17 @@
 import React, {ChangeEvent, FormEvent, useState} from "react";
-import usePictures from "../api/usePictures";
 import "./PictureGallery.css";
 import CheckBox from "./CheckBox";
-import PictureEntry from "./PictureEntry";
 
 export default function PictureGallery() {
 
-    const {imageInfos, allTags, uploadPicture, addTags} = usePictures();
+  //  const {imageInfos, allTags, uploadPicture, addTags} = usePictures();
     const [imagePreload, setPicPreload] = useState<File>();
     const [actualTags, setActualTags] = useState<string[]>();
     const [showTags, setShowTags] = useState<boolean>(false);
 
     const handleSave = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        return uploadPicture(event.target as HTMLFormElement);
+   //     return uploadPicture(event.target as HTMLFormElement);
     }
 
     const previewImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -59,16 +57,17 @@ export default function PictureGallery() {
                 addTagToActualTags={addTagFromActualTags}
                 isActualTag={actualTags?actualTags.includes("withoutTag"):false}
             />
-            {allTags ? allTags.map(tag =>
-                    <CheckBox
-                        key={tag}
-                        tag={tag}
-                        deleteTagFromActualTags={deleteTagFromActualTags}
-                        addTagToActualTags={addTagFromActualTags}
-                        isActualTag={actualTags?actualTags.includes(tag):false}
-                    />
-                )
-                : "keine Tags vorhanden"
+            {//     {allTags ? allTags.map(tag =>
+                //             <CheckBox
+                //                 key={tag}
+                //                 tag={tag}
+                //                 deleteTagFromActualTags={deleteTagFromActualTags}
+                //                 addTagToActualTags={addTagFromActualTags}
+                //                 isActualTag={actualTags?actualTags.includes(tag):false}
+                //             />
+                //         )
+                //         : "keine Tags vorhanden"
+                //     }
             }
             <button className={"filterResetButton"}
                     onClick={() => setActualTags(undefined)}> x
@@ -80,23 +79,24 @@ export default function PictureGallery() {
             Tags einblenden
         </div>
         <div className={"pictureGalleryContainer"}>
-            {imageInfos &&
-                imageInfos.map(info =>
-                        (
-                            (actualTags && info.tags.some(tag => actualTags.includes(tag))
-                            )
-                            ||
-                            !actualTags
-                            ||
-                            (actualTags.includes("withoutTag") && info.tags.length === 0)
-                        )
-                        && <PictureEntry
-                            key={info.url}
-                            info={info}
-                            addTags={addTags}
-                            showTags={showTags}
-                        />
-                )
+            {//  {imageInfos &&
+                //      imageInfos.map(info =>
+                //              (
+                //                  (actualTags && info.tags.some(tag => actualTags.includes(tag))
+                //                  )
+                //                  ||
+                //                  !actualTags
+                //                  ||
+                //                  (actualTags.includes("withoutTag") && info.tags.length === 0)
+                //              )
+                //              && <PictureEntry
+                //                  key={info.url}
+                //                  info={info}
+                //                  addTags={addTags}
+                //                  showTags={showTags}
+                //              />
+                //      )
+                //  }
             }
         </div>
         <form className={"pictureUploadForm noPrint"} onSubmit={handleSave}>
