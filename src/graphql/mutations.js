@@ -17,11 +17,11 @@ export const createTodo = /* GraphQL */ `
   }
 `;
 export const updateTodo = /* GraphQL */ `
-  mutation UpdateTodo(
+  mutation UpdateImageInfo(
     $input: UpdateImageInfoInput!
     $condition: ModelImageInfoConditionInput
   ) {
-    updateTodo(input: $input, condition: $condition) {
+    updateImageInfo(input: $input, condition: $condition) {
       id
       name
       tags
@@ -32,11 +32,11 @@ export const updateTodo = /* GraphQL */ `
   }
 `;
 export const deleteTodo = /* GraphQL */ `
-  mutation DeleteTodo(
+  mutation DeleteImageInfo(
     $input: DeleteImageInfoInput!
     $condition: ModelImageInfoConditionInput
   ) {
-    deleteTodo(input: $input, condition: $condition) {
+    deleteImageInfo(input: $input, condition: $condition) {
       id
       name
       tags

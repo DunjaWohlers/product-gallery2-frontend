@@ -11,9 +11,10 @@ export default function App() {
     const initialFormState = {name: 'horst', tags: ["a"], image: ""}
     const [formData, setFormData] = useState<InitialImageInfo>(initialFormState);
     const {notes, createNote, deleteNote, imageUpload} = usePictures();
+    const [actualNoteInput, setActualNoteInput]  = useState<string>("");
 
     async function onEditPicture(e: ChangeEvent<HTMLInputElement>) {
-        if (e.target.files && !e.target.files[0] || !e.target.files) return
+        if ((e.target.files && !e.target.files[0] )|| !e.target.files) return
         const file = e.target.files[0];
         console.log(file);
         console.log("imageupload:")
@@ -78,7 +79,7 @@ export default function App() {
                     notes?.map((note) => (
                         <div key={note.id || note.name}>
                             <h2>{note.name}</h2>
-                            <p>[...note.tags]</p>
+                            <p>{[...note.tags]}</p>
                             <button onClick={() => {
                                 note.id && deleteNote(note);
                             }}>Delete note
