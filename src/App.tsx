@@ -1,15 +1,31 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import './App.css';
 import PictureGallery from "./component/PictureGallery";
 import {Authenticator} from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import usePictures from "./api/usePictures";
-
+import {InitialNote} from "./type/Note";
+import {Storage} from "aws-amplify";
 
 export default function App() {
-    const initialFormState = {name: '', description: ''}
-    const [formData, setFormData] = useState(initialFormState);
-    const {notes, createNote, deleteNote} = usePictures();
+    const initialFormState = {name: '', description: '', image: ""}
+    const [formData, setFormData] = useState<InitialNote>(initialFormState);
+    const {notes, createNote, deleteNote, imageUpload} = usePictures();
+
+    async function onChangeHandler(e: ChangeEvent<HTMLInputElement>) {
+        if (e.target.files && !e.target.files[0] || !e.target.files) return
+        const file = e.target.files[0];
+        await imageUpload(e.target.files[0])
+        const imageLink = await Storage.get(file.name);
+        setFormData({...formData, image: imageLink});
+    }
+
+    const handleCreateNote = async () => {
+        if (formData.name !== "" && formData.description !== "") {
+            createNote(formData);
+            setFormData(initialFormState);
+        }
+    }
 
     return (
         <div className="App">
@@ -37,21 +53,25 @@ export default function App() {
                 placeholder="Note description"
                 value={formData.description}
             />
-            <button onClick={() => {
-                createNote(formData);
-                setFormData(initialFormState);
-            }}>Create Note
+            <input
+                type="file" onChange={onChangeHandler}/>
+            <button onClick={handleCreateNote}>Create Note
             </button>
             <div style={{marginBottom: 30}}>
                 {
-                    notes?.map(note => (
+                    notes?.map((note) => (
                         <div key={note.id || note.name}>
                             <h2>{note.name}</h2>
                             <p>{note.description}</p>
                             <button onClick={() => {
-                                note.id && deleteNote(note.id);
+                                note.id && deleteNote(note);
                             }}>Delete note
                             </button>
+                            {
+                               note.image !== "" &&
+                               <img src={note.image}
+                                    style={{width: 400}} alt={"Image for the note " + note.name + " could not be loaded."}/>
+                            }
                         </div>
                     ))
                 }

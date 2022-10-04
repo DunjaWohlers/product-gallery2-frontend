@@ -1,7 +1,11 @@
 export type Note = {
-    id: string,
+    id?: string,
     name: string,
-    description: string
+    description: string,
+    image: string
 }
 
 export type InitialNote = Omit<Note, "id">
+
+
+

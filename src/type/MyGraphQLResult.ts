@@ -1,7 +1,9 @@
+import {Note} from "./Note";
+
 export interface MyGraphQLResult {
     data?: {
         listTodos:
-            { items: { name: string, description: string }[] }
+            { items: Note [] }
     };
     errors?: [object];
     extensions?: {
