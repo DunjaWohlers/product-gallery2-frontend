@@ -1,9 +1,9 @@
-import {Note} from "./Note";
+import {ImageInfoType} from "./Note";
 
 export interface MyGraphQLResult {
     data?: {
-        listTodos:
-            { items: Note [] }
+        listImageInfos:
+            { items: ImageInfoType [] }
     };
     errors?: [object];
     extensions?: {

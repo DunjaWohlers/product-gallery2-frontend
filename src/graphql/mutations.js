@@ -2,14 +2,14 @@
 // this is an auto generated file. This will be overwritten
 
 export const createTodo = /* GraphQL */ `
-  mutation CreateTodo(
-    $input: CreateTodoInput!
-    $condition: ModelTodoConditionInput
+  mutation CreateImageInfo(
+    $input: CreateImageInfoInput!
+    $condition: ModelImageInfoConditionInput
   ) {
-    createTodo(input: $input, condition: $condition) {
+    createImageInfo(input: $input, condition: $condition) {
       id
       name
-      description
+      tags
       image
       createdAt
       updatedAt
@@ -18,13 +18,13 @@ export const createTodo = /* GraphQL */ `
 `;
 export const updateTodo = /* GraphQL */ `
   mutation UpdateTodo(
-    $input: UpdateTodoInput!
-    $condition: ModelTodoConditionInput
+    $input: UpdateImageInfoInput!
+    $condition: ModelImageInfoConditionInput
   ) {
     updateTodo(input: $input, condition: $condition) {
       id
       name
-      description
+      tags
       image
       createdAt
       updatedAt
@@ -33,13 +33,13 @@ export const updateTodo = /* GraphQL */ `
 `;
 export const deleteTodo = /* GraphQL */ `
   mutation DeleteTodo(
-    $input: DeleteTodoInput!
-    $condition: ModelTodoConditionInput
+    $input: DeleteImageInfoInput!
+    $condition: ModelImageInfoConditionInput
   ) {
     deleteTodo(input: $input, condition: $condition) {
       id
       name
-      description
+      tags
       image
       createdAt
       updatedAt

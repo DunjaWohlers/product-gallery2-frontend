@@ -2,11 +2,11 @@
 // this is an auto generated file. This will be overwritten
 
 export const getTodo = /* GraphQL */ `
-  query GetTodo($id: ID!) {
-    getTodo(id: $id) {
+  query GetImageInfo($id: ID!) {
+    getImageInfo(id: $id) {
       id
       name
-      description
+      tags
       image
       createdAt
       updatedAt
@@ -14,16 +14,16 @@ export const getTodo = /* GraphQL */ `
   }
 `;
 export const listTodos = /* GraphQL */ `
-  query ListTodos(
-    $filter: ModelTodoFilterInput
+  query ListImageInfos(
+    $filter: ModelImageInfoFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listTodos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listImageInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
-        description
+        tags
         image
         createdAt
         updatedAt

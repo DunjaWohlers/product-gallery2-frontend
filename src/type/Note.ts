@@ -1,11 +1,8 @@
-export type Note = {
-    id?: string,
+export type ImageInfoType = {
+    id: string,
     name: string,
-    description: string,
+    tags: string[],
     image: string
 }
 
-export type InitialNote = Omit<Note, "id">
-
-
-
+export type InitialImageInfo = Omit<ImageInfoType, "id">

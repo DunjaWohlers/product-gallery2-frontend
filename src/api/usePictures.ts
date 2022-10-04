@@ -2,26 +2,30 @@ import {useEffect, useState} from "react";
 import {API, Storage} from "aws-amplify";
 import {listTodos} from "../graphql/queries";
 import {createTodo as createNoteMutation, deleteTodo as deleteNoteMutation} from '../graphql/mutations';
-import {InitialNote, Note} from "../type/Note";
+import {ImageInfoType, InitialImageInfo} from "../type/Note";
 import {MyGraphQLResult} from "../type/MyGraphQLResult";
 
 export default function usePictures() {
 
-    const [notes, setNotes] = useState<Note [] | undefined>([]);
+    const [notes, setNotes] = useState<ImageInfoType [] | undefined>([]);
 
     useEffect(() => {
-        fetchNotes();
+        fetchNotes().catch(() => console.log("Laden fehlgeschlagen"));
     }, []);
 
-    async function imageUpload(file: File) {
-        await Storage.put(file.name, file);
-        fetchNotes();
+    function imageUpload(file: File) {
+        console.log(file);
+        Storage.put(file.name, file).then(fetchNotes);
     }
 
     async function fetchNotes() {
-        const apiData = await API.graphql({query: listTodos}) as MyGraphQLResult;
-        const notesFromAPI: Note[] | undefined = apiData.data?.listTodos.items;
+        console.log("Start");
 
+        const apiData = await (API.graphql({query: listTodos})) as MyGraphQLResult;
+
+        console.log(apiData)
+        const notesFromAPI: ImageInfoType[] | undefined = apiData.data?.listImageInfos.items;
+        console.log(notesFromAPI)
         if (notesFromAPI) {
             Promise.all(
                 notesFromAPI
@@ -29,18 +33,20 @@ export default function usePictures() {
         }
     }
 
-    async function createNote(note: InitialNote) {
-        await API.graphql({query: createNoteMutation, variables: {input: note}});
+    async function createNote(imageInfo: InitialImageInfo) {
+        console.log(imageInfo)
+        await API.graphql({query: createNoteMutation, variables: {input: imageInfo}});
+        console.log("gespeichert?")
     }
 
-    async function deleteNote(note: Note) {
-        const id=note.id;
+    async function deleteNote(imageInfo: ImageInfoType) {
+        const id = imageInfo.id;
         const newNotesArray = notes?.filter(note => note.id !== id);
         setNotes(newNotesArray);
         await API.graphql({query: deleteNoteMutation, variables: {input: {id}}});
-        const imageLink = note.image;
+        const imageLink = imageInfo.image;
         const imageName = imageLink.split("/public/")[1].split("?")[0];
-        Storage.remove(imageName);
+        await Storage.remove(imageName);
     }
 
     return {notes, createNote, deleteNote, imageUpload}

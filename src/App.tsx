@@ -4,27 +4,42 @@ import PictureGallery from "./component/PictureGallery";
 import {Authenticator} from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import usePictures from "./api/usePictures";
-import {InitialNote} from "./type/Note";
 import {Storage} from "aws-amplify";
+import {InitialImageInfo} from "./type/Note";
 
 export default function App() {
-    const initialFormState = {name: '', description: '', image: ""}
-    const [formData, setFormData] = useState<InitialNote>(initialFormState);
+    const initialFormState = {name: 'horst', tags: ["a"], image: ""}
+    const [formData, setFormData] = useState<InitialImageInfo>(initialFormState);
     const {notes, createNote, deleteNote, imageUpload} = usePictures();
 
-    async function onChangeHandler(e: ChangeEvent<HTMLInputElement>) {
+    async function onEditPicture(e: ChangeEvent<HTMLInputElement>) {
         if (e.target.files && !e.target.files[0] || !e.target.files) return
         const file = e.target.files[0];
+        console.log(file);
+        console.log("imageupload:")
         await imageUpload(e.target.files[0])
         const imageLink = await Storage.get(file.name);
+        console.log("edit")
+        console.log(file.name);
+        console.log(formData);
+            console.log(imageLink)
         setFormData({...formData, image: imageLink});
     }
 
-    const handleCreateNote = async () => {
-        if (formData.name !== "" && formData.description !== "") {
-            createNote(formData);
+    const handleSaveImageInfo = async () => {
+        if (formData && formData.image && formData.tags) {
+            await createNote(formData);
             setFormData(initialFormState);
+            return
         }
+        console.log("Formdata, Image oder Tags nicht vorhanden.")
+    }
+
+    const handleChangeTags = (e: ChangeEvent<HTMLInputElement>) => {
+        let inputValue = e.target.value;
+        let newTags = formData.tags;
+        newTags? newTags.push(inputValue)  : newTags=[inputValue];
+        setFormData({...formData, 'tags': newTags});
     }
 
     return (
@@ -43,34 +58,36 @@ export default function App() {
             </main>
 
             <h1>My Notes App</h1>
-            <input
+            {/*  <input
                 onChange={e => setFormData({...formData, 'name': e.target.value})}
                 placeholder="Note name"
                 value={formData.name}
             />
+            */
+            }
             <input
-                onChange={e => setFormData({...formData, 'description': e.target.value})}
+                onChange={handleChangeTags}
                 placeholder="Note description"
-                value={formData.description}
             />
             <input
-                type="file" onChange={onChangeHandler}/>
-            <button onClick={handleCreateNote}>Create Note
+                type="file" onChange={onEditPicture}/>
+            <button onClick={handleSaveImageInfo}>Create Note
             </button>
             <div style={{marginBottom: 30}}>
                 {
                     notes?.map((note) => (
                         <div key={note.id || note.name}>
                             <h2>{note.name}</h2>
-                            <p>{note.description}</p>
+                            <p>[...note.tags]</p>
                             <button onClick={() => {
                                 note.id && deleteNote(note);
                             }}>Delete note
                             </button>
                             {
-                               note.image !== "" &&
-                               <img src={note.image}
-                                    style={{width: 400}} alt={"Image for the note " + note.name + " could not be loaded."}/>
+                                note.image !== "" &&
+                                <img src={note.image}
+                                     style={{width: 400}}
+                                     alt={"Image for the note " + note.name + " could not be loaded."}/>
                             }
                         </div>
                     ))
