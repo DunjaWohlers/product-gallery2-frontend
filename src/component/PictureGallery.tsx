@@ -27,7 +27,7 @@ export default function PictureGallery() {
         if (imagePreload) {
             await savePicture();
             const url = await getPictureUrl(imagePreload)
-            const newFormData = {name: formData.name, tags: formData.tags, image: url};
+            const newFormData = {name: imagePreload.name, tags: formData.tags, image: url};
             await createImageInfo(newFormData);
             setFormData(initialFormState);
             setPicPreload(undefined);

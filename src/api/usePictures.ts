@@ -27,14 +27,30 @@ export default function usePictures() {
         const notesFromAPI: ImageInfoType[] | undefined = apiData.data?.listImageInfos.items;
         if (notesFromAPI) {
             Promise.all(notesFromAPI)
-                .then(result => {
-                    setNotes(result);
-                    setTags(result);
-                })
+                .then(async notes => {
+                        let ar: ImageInfoType[] = await getArrayWithNewImageLinks(notes);
+                        setNotes(ar);
+                        fetchAllTagsFrom(ar);
+                    }
+                )
+                .catch(() => console.log("Notes + tags nicht vollständig geladen"))
         }
     }
 
-    const setTags = (data: ImageInfoType[]) => {
+    const getArrayWithNewImageLinks = async (result: ImageInfoType[]) => {
+        let array: ImageInfoType[] = [];
+        for (const element of result) {
+            let link: string = await getUrl(element.name);
+            array.push({name: element.name, id: element.id, tags: element.tags, image: link});
+        }
+        return array;
+    }
+
+    const getUrl = (name: string) => {
+        return Storage.get(name)
+    }
+
+    const fetchAllTagsFrom = (data: ImageInfoType[]) => {
         let array: string[] = [];
         data.forEach(info => {
             info.tags.forEach(tag => {
@@ -48,20 +64,20 @@ export default function usePictures() {
 
     const createImageInfo = async (imageInfo: InitialImageInfo) => {
         await API.graphql({query: createNoteMutation, variables: {input: imageInfo}});
-    await fetchNotes();
+        await fetchNotes();
     }
 
     const addTags = async (info: ImageInfoType, tags: string[]) => {
-        const updateItem: ImageInfoType= {name:info.name, image: info.image, id: info.id, tags: tags};
+        const updateItem: ImageInfoType = {name: info.name, image: info.image, id: info.id, tags: tags};
         console.log(updateItem)
         await API.graphql({query: updateImageInfo, variables: {input: updateItem}})
         await fetchNotes();
     }
 
     const deleteTag = async (info: ImageInfoType, tagToDelete: string) => {
-        const updatedTags = info.tags.filter(tag=>tag!==tagToDelete);
+        const updatedTags = info.tags.filter(tag => tag !== tagToDelete);
         console.log(updatedTags);
-        const updateItem: ImageInfoType= {name:info.name, image: info.image, id: info.id, tags: updatedTags};
+        const updateItem: ImageInfoType = {name: info.name, image: info.image, id: info.id, tags: updatedTags};
         await API.graphql({query: updateImageInfo, variables: {input: updateItem}});
         await fetchNotes();
     }
@@ -71,9 +87,9 @@ export default function usePictures() {
         const newNotesArray = imageInfoList?.filter(note => note.id !== id);
         setNotes(newNotesArray);
         await API.graphql({query: deleteNoteMutation, variables: {input: {id}}});
-        const imageLink = imageInfo.image;
-        const imageName = imageLink.split("/public/")[1].split("?")[0];
-        await Storage.remove(imageName);
+        // const imageLink = imageInfo.image;
+        // const imageName = imageLink.split("/public/")[1].split("?")[0];
+        await Storage.remove(imageInfo.name);
     }
 
     return {imageInfoList, allTags, createImageInfo, addTags, deleteImageInfo, imageUpload, deleteTag}
