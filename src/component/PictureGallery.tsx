@@ -1,22 +1,49 @@
 import React, {ChangeEvent, FormEvent, useState} from "react";
 import "./PictureGallery.css";
 import CheckBox from "./CheckBox";
+import {InitialImageInfo} from "../type/ImageInfoType";
+import PictureEntry from "./PictureEntry";
+import {Storage} from "aws-amplify";
+import usePictures from "../api/usePictures";
+
 
 export default function PictureGallery() {
 
-  //  const {imageInfos, allTags, uploadPicture, addTags} = usePictures();
-    const [imagePreload, setPicPreload] = useState<File>();
-    const [actualTags, setActualTags] = useState<string[]>();
-    const [showTags, setShowTags] = useState<boolean>(false);
+    const initialFormState = {name: '', tags: [], image: ''}
+    const {imageInfoList, allTags, createImageInfo, addTags, imageUpload} = usePictures();
 
-    const handleSave = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-   //     return uploadPicture(event.target as HTMLFormElement);
-    }
+    const [imagePreload, setPicPreload] = useState<File>();
+    const [actualTags, setActualTags] = useState<string[]>([]);
+    const [showTags, setShowTags] = useState<boolean>(false);
+    const [formData, setFormData] = useState<InitialImageInfo>(initialFormState);
 
     const previewImage = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0])
             setPicPreload(event.target.files[0])
+    }
+
+    const addNewImageInfo = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (imagePreload) {
+            await savePicture();
+            const url = await getPictureUrl(imagePreload)
+            const newFormData = {name: formData.name, tags: formData.tags, image: url};
+            await createImageInfo(newFormData);
+            setFormData(initialFormState);
+            setPicPreload(undefined);
+        }
+    }
+
+    const savePicture = async () => {
+        const file = imagePreload;
+        console.log(file);
+        if (file) {
+            await imageUpload(file)
+        }
+    }
+
+    const getPictureUrl = async (file: File) => {
+        return await Storage.get(file.name);
     }
 
     const addTagFromActualTags = (tag: string) => {
@@ -24,11 +51,10 @@ export default function PictureGallery() {
         if (!actual) {
             actual = [];
         }
-        if(!actual.includes(tag)) {
+        if (!actual.includes(tag)) {
             actual = actual.concat(tag);
             setActualTags(actual);
         }
-        console.log(actual);
     }
 
     const deleteTagFromActualTags = (tag: string) => {
@@ -39,11 +65,11 @@ export default function PictureGallery() {
         actual = actual.filter(element => (element !== tag));
         setActualTags(actual);
         if (actual.length === 0) {
-            setActualTags(undefined);
+            setActualTags([]);
         }
     }
 
-    const handleShowTags = () => {
+    const toggleShowTags = () => {
         showTags
             ? setShowTags(false)
             : setShowTags(true)
@@ -55,51 +81,43 @@ export default function PictureGallery() {
                 tag={"ohne Tag"}
                 deleteTagFromActualTags={deleteTagFromActualTags}
                 addTagToActualTags={addTagFromActualTags}
-                isActualTag={actualTags?actualTags.includes("withoutTag"):false}
+                isActualTag={actualTags ? actualTags.includes("withoutTag") : false}
             />
-            {//     {allTags ? allTags.map(tag =>
-                //             <CheckBox
-                //                 key={tag}
-                //                 tag={tag}
-                //                 deleteTagFromActualTags={deleteTagFromActualTags}
-                //                 addTagToActualTags={addTagFromActualTags}
-                //                 isActualTag={actualTags?actualTags.includes(tag):false}
-                //             />
-                //         )
-                //         : "keine Tags vorhanden"
-                //     }
+            {allTags ? allTags.map(tag =>
+                    <CheckBox
+                        key={tag}
+                        tag={tag}
+                        deleteTagFromActualTags={deleteTagFromActualTags}
+                        addTagToActualTags={addTagFromActualTags}
+                        isActualTag={actualTags ? actualTags.includes(tag) : false}
+                    />
+                )
+                : "keine Tags vorhanden"
             }
             <button className={"filterResetButton"}
-                    onClick={() => setActualTags(undefined)}> x
+                    onClick={() => setActualTags([])}> x
             </button>
             Filter aufheben
             <input className={"showTagsButton"} type={"checkbox"}
                    defaultChecked={false}
-                   onChange={handleShowTags}/>
+                   onChange={toggleShowTags}/>
             Tags einblenden
         </div>
+
         <div className={"pictureGalleryContainer"}>
-            {//  {imageInfos &&
-                //      imageInfos.map(info =>
-                //              (
-                //                  (actualTags && info.tags.some(tag => actualTags.includes(tag))
-                //                  )
-                //                  ||
-                //                  !actualTags
-                //                  ||
-                //                  (actualTags.includes("withoutTag") && info.tags.length === 0)
-                //              )
-                //              && <PictureEntry
-                //                  key={info.url}
-                //                  info={info}
-                //                  addTags={addTags}
-                //                  showTags={showTags}
-                //              />
-                //      )
-                //  }
+            {
+                imageInfoList?.map((imageInfo) => (
+                    <PictureEntry
+                        key={imageInfo.id}
+                        info={imageInfo}
+                        addTags={addTags}
+                        showImageInfo={showTags}
+                        actualTags={actualTags}
+                    />
+                ))
             }
         </div>
-        <form className={"pictureUploadForm noPrint"} onSubmit={handleSave}>
+        <form className={"pictureUploadForm noPrint"} onSubmit={addNewImageInfo}>
             <label> Neues Bild hinzufügen: </label>
             <div>
                 <input type={"file"} name={"file"} onChange={previewImage}/>

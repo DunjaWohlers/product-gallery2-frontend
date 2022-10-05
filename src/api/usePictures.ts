@@ -1,47 +1,74 @@
 import {useEffect, useState} from "react";
 import {API, Storage} from "aws-amplify";
-import {listTodos} from "../graphql/queries";
-import {createTodo as createNoteMutation, deleteTodo as deleteNoteMutation} from '../graphql/mutations';
-import {ImageInfoType, InitialImageInfo} from "../type/Note";
+import {listImageInfos} from "../graphql/queries.js";
+import {
+    createImageInfo as createNoteMutation,
+    deleteImageInfo as deleteNoteMutation,
+    updateImageInfo
+} from '../graphql/mutations';
+import {ImageInfoType, InitialImageInfo} from "../type/ImageInfoType";
 import {MyGraphQLResult} from "../type/MyGraphQLResult";
 
 export default function usePictures() {
 
-    const [notes, setNotes] = useState<ImageInfoType [] | undefined>([]);
+    const [imageInfoList, setNotes] = useState<ImageInfoType []>([]);
+    const [allTags, setAllTags] = useState<string[]>();
 
     useEffect(() => {
         fetchNotes().catch(() => console.log("Laden fehlgeschlagen"));
     }, []);
 
     function imageUpload(file: File) {
-        console.log(file);
-        Storage.put(file.name, file).then(fetchNotes);
+        Storage.put(file.name, file).catch(() => console.log("upload fehlgeschlagen"));
     }
 
-    async function fetchNotes() {
-        console.log("Start");
-
-        const apiData = await (API.graphql({query: listTodos})) as MyGraphQLResult;
-
-        console.log(apiData)
+    const fetchNotes = async () => {
+        const apiData = await (API.graphql({query: listImageInfos})) as MyGraphQLResult;
         const notesFromAPI: ImageInfoType[] | undefined = apiData.data?.listImageInfos.items;
-        console.log(notesFromAPI)
         if (notesFromAPI) {
-            Promise.all(
-                notesFromAPI
-            ).then(result => setNotes(result));
+            Promise.all(notesFromAPI)
+                .then(result => {
+                    setNotes(result);
+                    setTags(result);
+                })
         }
     }
 
-    async function createNote(imageInfo: InitialImageInfo) {
-        console.log(imageInfo)
-        await API.graphql({query: createNoteMutation, variables: {input: imageInfo}});
-        console.log("gespeichert?")
+    const setTags = (data: ImageInfoType[]) => {
+        let array: string[] = [];
+        data.forEach(info => {
+            info.tags.forEach(tag => {
+                if (!array.includes(tag)) {
+                    array.push(tag);
+                }
+            })
+        })
+        setAllTags(array);
     }
 
-    async function deleteNote(imageInfo: ImageInfoType) {
+    const createImageInfo = async (imageInfo: InitialImageInfo) => {
+        await API.graphql({query: createNoteMutation, variables: {input: imageInfo}});
+    await fetchNotes();
+    }
+
+    const addTags = async (info: ImageInfoType, tags: string[]) => {
+        const updateItem: ImageInfoType= {name:info.name, image: info.image, id: info.id, tags: tags};
+        console.log(updateItem)
+        await API.graphql({query: updateImageInfo, variables: {input: updateItem}})
+        await fetchNotes();
+    }
+
+    const deleteTag = async (info: ImageInfoType, tagToDelete: string) => {
+        const updatedTags = info.tags.filter(tag=>tag!==tagToDelete);
+        console.log(updatedTags);
+        const updateItem: ImageInfoType= {name:info.name, image: info.image, id: info.id, tags: updatedTags};
+        await API.graphql({query: updateImageInfo, variables: {input: updateItem}});
+        await fetchNotes();
+    }
+
+    const deleteImageInfo = async (imageInfo: ImageInfoType) => {
         const id = imageInfo.id;
-        const newNotesArray = notes?.filter(note => note.id !== id);
+        const newNotesArray = imageInfoList?.filter(note => note.id !== id);
         setNotes(newNotesArray);
         await API.graphql({query: deleteNoteMutation, variables: {input: {id}}});
         const imageLink = imageInfo.image;
@@ -49,5 +76,5 @@ export default function usePictures() {
         await Storage.remove(imageName);
     }
 
-    return {notes, createNote, deleteNote, imageUpload}
+    return {imageInfoList, allTags, createImageInfo, addTags, deleteImageInfo, imageUpload, deleteTag}
 }

@@ -1,55 +1,48 @@
 import React, {useState} from "react";
-import {ImageCard} from "../type/ImageCard";
 import "./PictureEntry.css";
+import {ImageInfoType} from "../type/ImageInfoType";
+import CardInput from "./CardInput";
+import TagContainer from "./TagContainer";
+import usePictures from "../api/usePictures";
 
 type PictureEntryProps = {
-    info: ImageCard,
-    addTags: (id: string, tags: string[]) => void,
-    showTags: boolean,
+    info: ImageInfoType,
+    addTags: (id: ImageInfoType, tags: string[]) => void,
+    showImageInfo: boolean,
+    actualTags: string[],
 }
 
 export default function PictureEntry(props: PictureEntryProps) {
-    const [inputValue, setInputValue] = useState<string>("");
     const [visible, setVisible] = useState<boolean>(false);
-    const maxShownTags = 3;
-
-    const handleClick = () => {
-        let inputString = inputValue.split(" ");
-        props.addTags(props.info.publicId, inputString);
-        setInputValue("")
-    }
+    const {deleteImageInfo} = usePictures();
 
     const toggleVisible = () => {
-        visible? setVisible(false): setVisible(true);
+        visible ? setVisible(false) : setVisible(true);
     }
 
-    return (
-        <div className={"card"}>
-            <div className={"imageFrame"} onClick={toggleVisible}>
-                <img className={"cardImage"} src={props.info.url} alt={"img"}/>
-            </div>
-            {props.showTags && <div className={"tagContainer"}>
-                {props.info.tags.slice(0,maxShownTags).map(tag =>
-                    <div className="tag" key={crypto.randomUUID()}>{tag}</div>)}
-            </div>
-            }
-            {visible ? <form className={"cardForm"} onSubmit={handleClick}>
-                    <label className={"cardLabel"}> Neuer Tag: </label>
-                    <div>
-                        <input
-                            className={"cardInput"}
-                            type={"text"}
-                            onChange={
-                                (event) =>
-                                    setInputValue(event.target.value)
-                            }
-                            value={inputValue}
-                        />
-                        <button type={"submit"}> +</button>
+    return (<>
+            {
+                (
+                    props.actualTags.some(element => props.info.tags.includes(element))
+                    ||
+                    props.actualTags.includes("withoutTag") && props.info.tags.length === 0
+                    ||
+                    props.actualTags.length === 0
+                )
+                &&
+                <div className={"card"}>
+                    <div className={"imageFrame"} onClick={toggleVisible}>
+                        <img className={"cardImage"} src={props.info.image} alt={"img"}/>
                     </div>
-                </form>
-                : ""
+                    {props.showImageInfo &&
+                        <TagContainer info={props.info}/>
+                    }
+                    {visible ? <CardInput setVisible={setVisible} addTags={props.addTags} info={props.info}/>
+                        : ""
+                    }
+                    <button onClick={() => deleteImageInfo(props.info)}>löschen</button>
+                </div>
             }
-        </div>
+        </>
     )
 }
