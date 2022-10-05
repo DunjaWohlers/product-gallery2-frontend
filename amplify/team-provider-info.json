@@ -1,19 +1,32 @@
 {
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifyc3827f3990494-staging-92849-authRole",
+      "UnauthRoleArn": "arn:aws:iam::003535077085:role/amplify-amplifyc3827f3990494-staging-92849-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::003535077085:role/amplify-amplifyc3827f3990494-staging-92849-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-amplifyc3827f3990494-staging-92849-deployment",
+      "UnauthRoleName": "amplify-amplifyc3827f3990494-staging-92849-unauthRole",
+      "StackName": "amplify-amplifyc3827f3990494-staging-92849",
+      "StackId": "arn:aws:cloudformation:us-east-1:003535077085:stack/amplify-amplifyc3827f3990494-staging-92849/1e6e06e0-4490-11ed-b35f-0e2e23c1a04f",
+      "AmplifyAppId": "dnp1htjgtqgps"
+    }
+  },
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-picturegallery-dev-152651-authRole",
-      "UnauthRoleArn": "arn:aws:iam::003535077085:role/amplify-picturegallery-dev-152651-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::003535077085:role/amplify-picturegallery-dev-152651-authRole",
+      "AuthRoleName": "amplify-productgallery2front-dev-114426-authRole",
+      "UnauthRoleArn": "arn:aws:iam::003535077085:role/amplify-productgallery2front-dev-114426-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::003535077085:role/amplify-productgallery2front-dev-114426-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-picturegallery-dev-152651-deployment",
-      "UnauthRoleName": "amplify-picturegallery-dev-152651-unauthRole",
-      "StackName": "amplify-picturegallery-dev-152651",
-      "StackId": "arn:aws:cloudformation:us-east-1:003535077085:stack/amplify-picturegallery-dev-152651/e2417f30-4255-11ed-86d9-128d997be3f7",
-      "AmplifyAppId": "duswyanle1z0d"
+      "DeploymentBucketName": "amplify-productgallery2front-dev-114426-deployment",
+      "UnauthRoleName": "amplify-productgallery2front-dev-114426-unauthRole",
+      "StackName": "amplify-productgallery2front-dev-114426",
+      "StackId": "arn:aws:cloudformation:us-east-1:003535077085:stack/amplify-productgallery2front-dev-114426/4f8fede0-4492-11ed-8f31-12c1154a7bd1",
+      "AmplifyAppId": "dnp1htjgtqgps"
     },
     "categories": {
       "auth": {
-        "picturegallery87a5dd62": {}
+        "productgallery2frontccb017cb": {}
       }
     }
   }

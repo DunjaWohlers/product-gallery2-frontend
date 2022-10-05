@@ -1,6 +1,6 @@
 {
   "auth": {
-    "picturegallery87a5dd62": {
+    "productgallery2frontccb017cb": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -26,7 +26,7 @@
     }
   },
   "api": {
-    "picturegallery": {
+    "productgallery2front": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -44,7 +44,7 @@
     }
   },
   "storage": {
-    "imagegallerystorage": {
+    "imagestoring": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

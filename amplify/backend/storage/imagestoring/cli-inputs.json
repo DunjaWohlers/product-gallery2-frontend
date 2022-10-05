@@ -1,7 +1,7 @@
 {
-  "resourceName": "imagegallerystorage",
-  "policyUUID": "6f84a59e",
-  "bucketName": "imagegallerybucket",
+  "resourceName": "imagestoring",
+  "policyUUID": "36f75011",
+  "bucketName": "imagebucking",
   "storageAccess": "auth",
   "guestAccess": [],
   "authAccess": [

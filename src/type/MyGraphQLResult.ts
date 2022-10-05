@@ -1,4 +1,4 @@
-import {ImageInfoType} from "./Note";
+import {ImageInfoType} from "./ImageInfoType";
 
 export interface MyGraphQLResult {
     data?: {

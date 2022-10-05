@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "picturegallery87a5dd62": {
+        "productgallery2frontccb017cb": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
@@ -11,14 +11,14 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "picturegallery": {
+        "productgallery2front": {
             "GraphQLAPIKeyOutput": "string",
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         }
     },
     "storage": {
-        "imagegallerystorage": {
+        "imagestoring": {
             "BucketName": "string",
             "Region": "string"
         }
